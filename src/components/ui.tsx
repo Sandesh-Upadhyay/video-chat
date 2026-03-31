@@ -64,7 +64,7 @@ export function PillToggle({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    <div className="flex flex-wrap gap-2">
       {items.map((it) => {
         const active = value === it.value;
         return (
@@ -73,17 +73,27 @@ export function PillToggle({
             type="button"
             onClick={() => onChange(it.value)}
             className={cn(
-              "group h-11 rounded-2xl border px-3 text-sm transition",
+              "group relative inline-flex h-11 items-center justify-center gap-2 rounded-2xl border px-3.5 text-[13px] transition sm:text-sm",
               "focus:outline-none focus:ring-4 focus:ring-sky-500/10",
               active
-                ? "border-sky-300/25 bg-gradient-to-b from-sky-500/20 to-blue-600/10 text-white shadow-[0_16px_50px_rgba(56,189,248,0.16)]"
-                : "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted))] hover:bg-[rgb(var(--rt-card-bg-hover))]",
+                ? "border-sky-300/35 bg-gradient-to-r from-sky-500/25 to-blue-600/15 text-white shadow-[0_16px_50px_rgba(56,189,248,0.18)]"
+                : "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted))] hover:border-[rgb(var(--rt-card-border-hover))] hover:bg-[rgb(var(--rt-card-bg-hover))]",
             )}
           >
-            <span className="inline-flex items-center justify-center gap-2">
-              {it.icon ? <span className="text-base">{it.icon}</span> : null}
-              <span className="font-medium">{it.label}</span>
-            </span>
+            {/* subtle inner highlight */}
+            <span
+              className={cn(
+                "pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity",
+                active ? "opacity-100" : "group-hover:opacity-60",
+              )}
+              style={{
+                background:
+                  "radial-gradient(140px 70px at 30% 20%, rgba(255,255,255,0.14), transparent 55%)",
+              }}
+            />
+
+            {it.icon ? <span className={cn("relative shrink-0 text-base", active ? "" : "opacity-90")}>{it.icon}</span> : null}
+            <span className="relative font-semibold tracking-tight">{it.label}</span>
           </button>
         );
       })}
