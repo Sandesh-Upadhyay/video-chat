@@ -14,8 +14,9 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        "rounded-3xl border border-white/10 bg-white/6 shadow-[0_30px_100px_rgba(0,0,0,0.40)] backdrop-blur-xl",
-        "transition will-change-transform hover:-translate-y-0.5 hover:border-white/15 hover:bg-white/8",
+        "rounded-3xl border bg-[rgb(var(--rt-card-bg))] shadow-[0_30px_100px_rgba(0,0,0,0.40)] backdrop-blur-xl",
+        "border-[rgb(var(--rt-card-border))]",
+        "transition will-change-transform hover:-translate-y-0.5 hover:border-[rgb(var(--rt-card-border-hover))] hover:bg-[rgb(var(--rt-card-bg-hover))]",
         className,
       )}
     >
@@ -34,7 +35,7 @@ export function Badge({
   className?: string;
 }) {
   const tones: Record<typeof tone, string> = {
-    neutral: "border-white/10 bg-white/6 text-white/80",
+    neutral: "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted))]",
     sky: "border-sky-300/20 bg-sky-500/15 text-sky-100",
     emerald: "border-emerald-300/20 bg-emerald-500/15 text-emerald-100",
     amber: "border-amber-200/20 bg-amber-500/15 text-amber-100"
@@ -76,7 +77,7 @@ export function PillToggle({
               "focus:outline-none focus:ring-4 focus:ring-sky-500/10",
               active
                 ? "border-sky-300/25 bg-gradient-to-b from-sky-500/20 to-blue-600/10 text-white shadow-[0_16px_50px_rgba(56,189,248,0.16)]"
-                : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10",
+                : "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted))] hover:bg-[rgb(var(--rt-card-bg-hover))]",
             )}
           >
             <span className="inline-flex items-center justify-center gap-2">

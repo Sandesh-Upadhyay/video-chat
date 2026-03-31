@@ -7,12 +7,35 @@ body {
   height: 100%;
 }
 
+/* Theme variables (used via Tailwind arbitrary values) */
+:root {
+  --rt-fg: 255 255 255;
+  --rt-muted: 255 255 255 / 0.72;
+  --rt-muted2: 255 255 255 / 0.6;
+  --rt-card-bg: 255 255 255 / 0.06;
+  --rt-card-bg-hover: 255 255 255 / 0.08;
+  --rt-card-border: 255 255 255 / 0.10;
+  --rt-card-border-hover: 255 255 255 / 0.16;
+  --rt-field-bg: 6 16 36 / 0.55;
+}
+
+.theme-light {
+  --rt-fg: 9 18 32;
+  --rt-muted: 9 18 32 / 0.72;
+  --rt-muted2: 9 18 32 / 0.58;
+  --rt-card-bg: 255 255 255 / 0.72;
+  --rt-card-bg-hover: 255 255 255 / 0.86;
+  --rt-card-border: 15 23 42 / 0.10;
+  --rt-card-border-hover: 15 23 42 / 0.16;
+  --rt-field-bg: 255 255 255 / 0.85;
+}
+
 body {
   background: radial-gradient(1200px 600px at 10% 10%, rgba(59, 130, 246, 0.22), transparent 55%),
     radial-gradient(900px 500px at 95% 10%, rgba(14, 165, 233, 0.18), transparent 52%),
     radial-gradient(900px 700px at 50% 95%, rgba(99, 102, 241, 0.16), transparent 58%),
     linear-gradient(180deg, #061024, #070f1f);
-  color: white;
+  color: rgb(var(--rt-fg));
   overflow-x: hidden;
 }
 
@@ -20,7 +43,6 @@ body {
   background: radial-gradient(1000px 520px at 10% 12%, rgba(14, 165, 233, 0.18), transparent 55%),
     radial-gradient(900px 540px at 92% 18%, rgba(99, 102, 241, 0.16), transparent 55%),
     linear-gradient(180deg, #f7fbff, #eef5ff);
-  color: #0b1220;
 }
 
 /* Subtle animated glow layer */
