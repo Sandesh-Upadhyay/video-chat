@@ -4,7 +4,7 @@ import { cn } from "./ui";
 
 type Item = { value: string; label: string; icon?: string };
 
-function useClickOutside(ref: React.RefObject<HTMLElement>, onOutside: () => void) {
+function useClickOutside<T extends HTMLElement>(ref: React.RefObject<T | null>, onOutside: () => void) {
   useEffect(() => {
     function onDown(e: MouseEvent | TouchEvent) {
       const el = ref.current;
