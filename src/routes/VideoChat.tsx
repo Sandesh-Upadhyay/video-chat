@@ -40,6 +40,8 @@ export default function VideoChat() {
   const [devicesError, setDevicesError] = useState<string | null>(null);
 
   const wsRef = useRef<WebSocket | null>(null);
+  const startedRef = useRef(false);
+  const manualStopRef = useRef(false);
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
   const remoteStreamRef = useRef<MediaStream | null>(null);
@@ -126,6 +128,11 @@ export default function VideoChat() {
   }
 
   async function startMatching() {
+    // Prevent duplicate connections in React dev StrictMode
+    if (startedRef.current) return;
+    startedRef.current = true;
+    manualStopRef.current = false;
+
     setStatus("connecting");
     pushSystem("Connecting…");
 
@@ -218,6 +225,14 @@ export default function VideoChat() {
       setRole(null);
       setStatus("stopped");
       pushSystem("Disconnected from server.");
+
+      // Auto-reconnect unless user explicitly stopped
+      if (!manualStopRef.current) {
+        startedRef.current = false;
+        setTimeout(() => {
+          startMatching();
+        }, 800);
+      }
     };
 
     ws.onerror = () => {
@@ -226,6 +241,7 @@ export default function VideoChat() {
   }
 
   function stopAll() {
+    manualStopRef.current = true;
     wsSend({ type: "stop" });
     wsRef.current?.close();
     wsRef.current = null;
@@ -258,6 +274,7 @@ export default function VideoChat() {
   useEffect(() => {
     startMatching();
     return () => {
+      manualStopRef.current = true;
       try {
         wsRef.current?.close();
       } catch {}
@@ -265,6 +282,7 @@ export default function VideoChat() {
       try {
         localStreamRef.current?.getTracks().forEach((t) => t.stop());
       } catch {}
+      startedRef.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
