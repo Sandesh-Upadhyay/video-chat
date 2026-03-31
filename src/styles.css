@@ -8,10 +8,58 @@ body {
 }
 
 body {
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(59, 130, 246, 0.20), transparent 55%),
-    radial-gradient(900px 500px at 95% 10%, rgba(14, 165, 233, 0.18), transparent 50%),
-    radial-gradient(900px 700px at 50% 95%, rgba(99, 102, 241, 0.14), transparent 55%),
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(59, 130, 246, 0.22), transparent 55%),
+    radial-gradient(900px 500px at 95% 10%, rgba(14, 165, 233, 0.18), transparent 52%),
+    radial-gradient(900px 700px at 50% 95%, rgba(99, 102, 241, 0.16), transparent 58%),
     linear-gradient(180deg, #061024, #070f1f);
   color: white;
+  overflow-x: hidden;
+}
+
+.theme-light body {
+  background: radial-gradient(1000px 520px at 10% 12%, rgba(14, 165, 233, 0.18), transparent 55%),
+    radial-gradient(900px 540px at 92% 18%, rgba(99, 102, 241, 0.16), transparent 55%),
+    linear-gradient(180deg, #f7fbff, #eef5ff);
+  color: #0b1220;
+}
+
+/* Subtle animated glow layer */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -30vmax;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.16), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(99, 102, 241, 0.14), transparent 42%),
+    radial-gradient(circle at 55% 85%, rgba(217, 70, 239, 0.10), transparent 45%);
+  filter: blur(14px);
+  opacity: 0.9;
+  animation: driftGlow 16s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes driftGlow {
+  0% {
+    transform: translate3d(-1.5%, -1.2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.2%, 1.6%, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(-1.5%, -1.2%, 0) scale(1);
+  }
+}
+
+@keyframes floatGlow {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(3%, -2%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
