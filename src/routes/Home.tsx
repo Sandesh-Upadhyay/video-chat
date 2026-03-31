@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import ThemeToggle from "../components/ThemeToggle";
-import { Badge, GlassCard, PillToggle } from "../components/ui";
+import { Badge, GlassCard } from "../components/ui";
+import SelectMenu from "../components/SelectMenu";
 
 const COUNTRIES: Array<{ code: string; name: string }> = [
   { code: "all", name: "All countries" },
@@ -18,6 +19,13 @@ const COUNTRIES: Array<{ code: string; name: string }> = [
 ];
 
 type Gender = "all" | "male" | "female" | "couple";
+
+const GENDER_OPTIONS: Array<{ value: Gender; label: string }> = [
+  { value: "all", label: "✨ All" },
+  { value: "male", label: "👨 Male" },
+  { value: "female", label: "👩 Female" },
+  { value: "couple", label: "🧑‍🤝‍🧑 Couple" },
+];
 
 function softClick() {
   try {
@@ -112,57 +120,69 @@ export default function Home() {
                 </div>
 
                 <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                  <label className="grid gap-2">
-                    <span className="text-xs font-medium text-[rgb(var(--rt-muted))]">Country</span>
-                    <div className="relative">
-                      <select
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                        className="h-12 w-full appearance-none rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] px-4 pr-10 text-sm text-[rgb(var(--rt-fg))] outline-none ring-0 transition focus:border-sky-300/25 focus:ring-4 focus:ring-sky-500/10"
-                      >
-                        {COUNTRIES.map((c) => (
-                          <option key={c.code} value={c.code}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-3 grid place-items-center text-[rgb(var(--rt-muted2))]">
-                        ▾
-                      </div>
-                    </div>
-                  </label>
+                  <SelectMenu
+                    label="Country"
+                    value={country}
+                    onChange={setCountry}
+                    leadingIcon="🌍"
+                    searchable
+                    items={COUNTRIES.map((c) => ({ value: c.code, label: c.name }))}
+                  />
 
                   <div className="grid gap-2">
                     <span className="text-xs font-medium text-[rgb(var(--rt-muted))]">I am</span>
-                    <PillToggle
-                      value={gender}
-                      onChange={(v) => setGender(v as Gender)}
-                      items={[
-                        { value: "all", label: "All", icon: "✨" },
-                        { value: "male", label: "Male", icon: "👨" },
-                        { value: "female", label: "Female", icon: "👩" },
-                        { value: "couple", label: "Couple", icon: "🧑‍🤝‍🧑" }
-                      ]}
-                    />
+                    <div className="group relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-3 grid w-6 place-items-center text-[rgb(var(--rt-muted2))]">
+                        👤
+                      </div>
+                      <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value as Gender)}
+                        className="h-12 w-full appearance-none rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] pl-11 pr-10 text-sm font-medium text-[rgb(var(--rt-fg))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] outline-none ring-0 transition group-hover:border-[rgb(var(--rt-card-border-hover))] focus:border-sky-300/25 focus:ring-4 focus:ring-sky-500/10"
+                      >
+                        {GENDER_OPTIONS.map((g) => (
+                          <option key={g.value} value={g.value}>
+                            {g.label}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-3 grid place-items-center text-[rgb(var(--rt-muted2))]">▾</div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
                   <motion.button
                     type="button"
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       softClick();
                       nav(`/chat?${query}`);
                     }}
-                    className="relative h-12 overflow-hidden rounded-2xl bg-gradient-to-r from-sky-400 to-blue-600 px-6 text-sm font-semibold shadow-[0_20px_90px_rgba(59,130,246,0.38)] transition"
+                    className={[
+                      "group relative isolate h-12 w-full overflow-hidden rounded-2xl px-6 text-sm font-semibold",
+                      "sm:w-auto sm:min-w-[190px]",
+                      "bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-500",
+                      "text-white shadow-[0_18px_80px_rgba(59,130,246,0.40)]",
+                      "ring-1 ring-white/15",
+                      "transition focus:outline-none focus:ring-4 focus:ring-sky-500/20",
+                      "active:brightness-[0.98]",
+                    ].join(" ")}
                   >
-                    <span className="relative z-10 inline-flex items-center gap-2">
-                      Start <span className="text-base">🚀</span>
+                    {/* glow */}
+                    <span className="pointer-events-none absolute -inset-10 -z-10 opacity-70 blur-2xl transition-opacity duration-300 group-hover:opacity-95">
+                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.38),transparent_55%),radial-gradient(circle_at_70%_80%,rgba(99,102,241,0.28),transparent_55%)]" />
                     </span>
-                    <span className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 hover:opacity-100">
-                      <span className="absolute -inset-20 bg-[radial-gradient(circle,rgba(255,255,255,0.35),transparent_55%)]" />
+
+                    {/* shimmer sweep */}
+                    <span className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span className="absolute -left-1/3 top-0 h-full w-1/2 skew-x-[-18deg] bg-gradient-to-r from-transparent via-white/35 to-transparent blur-[1px] motion-safe:animate-[shimmer_1.2s_ease-in-out_infinite]" />
+                    </span>
+
+                    <span className="relative z-10 inline-flex w-full items-center justify-center gap-2">
+                      <span>Start</span>
+                      <span className="text-base">🚀</span>
                     </span>
                   </motion.button>
 
