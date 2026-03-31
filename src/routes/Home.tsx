@@ -35,17 +35,10 @@ export default function Home() {
           <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-[0_20px_60px_rgba(59,130,246,0.35)]" />
           <div className="leading-tight">
             <div className="text-lg font-semibold tracking-tight">RandomTalk</div>
-            <div className="text-xs text-white/60">OmeTV-style random video chat</div>
+            <div className="text-xs text-white/60">Random video chat</div>
           </div>
         </div>
-        <div className="hidden items-center gap-3 sm:flex">
-          <a className="text-sm text-white/70 hover:text-white" href="https://ome.tv/rules" target="_blank" rel="noreferrer">
-            Rules
-          </a>
-          <a className="text-sm text-white/70 hover:text-white" href="https://ome.tv/" target="_blank" rel="noreferrer">
-            OmeTV
-          </a>
-        </div>
+        <div className="hidden items-center gap-3 sm:flex" />
       </header>
 
       <main className="mx-auto grid w-full max-w-6xl gap-8 px-6 pb-14 pt-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
@@ -121,7 +114,7 @@ export default function Home() {
               Start
             </button>
             <div className="text-xs text-white/60">
-              By pressing “Start”, you agree to OmeTV-style safety rules. Keep your face visible and be respectful.
+              By pressing “Start”, you agree to our safety rules. Keep your face visible and be respectful.
             </div>
           </div>
         </section>
