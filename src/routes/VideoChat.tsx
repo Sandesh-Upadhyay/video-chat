@@ -13,6 +13,14 @@ type WsInbound =
 type ChatItem = { from: "me" | "them" | "system"; text: string; at: number };
 
 const WS_BASE = (import.meta.env.VITE_WS_URL as string | undefined) || "";
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) || "";
+
+function toHttpBase(wsOrHttpBase: string) {
+  if (!wsOrHttpBase) return "";
+  if (wsOrHttpBase.startsWith("wss://")) return `https://${wsOrHttpBase.slice("wss://".length)}`;
+  if (wsOrHttpBase.startsWith("ws://")) return `http://${wsOrHttpBase.slice("ws://".length)}`;
+  return wsOrHttpBase;
+}
 
 function buildWsUrl(country: string, gender: string) {
   // Prefer explicit env (e.g. "wss://api.example.com" or "ws://localhost:8080").
@@ -42,6 +50,8 @@ export default function VideoChat() {
   const wsRef = useRef<WebSocket | null>(null);
   const startedRef = useRef(false);
   const manualStopRef = useRef(false);
+  const retryRef = useRef(0);
+  const gaveUpRef = useRef(false);
   const pcRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
   const remoteStreamRef = useRef<MediaStream | null>(null);
@@ -57,6 +67,27 @@ export default function VideoChat() {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) return;
     ws.send(JSON.stringify(payload));
+  }
+
+  async function checkBackendReachable() {
+    // If user configured explicit bases, check those instead of same-origin.
+    const explicit = API_BASE || WS_BASE;
+    if (explicit) {
+      try {
+        const res = await fetch(`${toHttpBase(explicit)}/api/stats`, { method: "GET" });
+        return res.ok;
+      } catch {
+        return false;
+      }
+    }
+
+    // Same-origin dev/prod: verify /api/stats exists to avoid infinite WS reconnect spam
+    try {
+      const res = await fetch("/api/stats", { method: "GET" });
+      return res.ok;
+    } catch {
+      return false;
+    }
   }
 
   async function ensureLocalMedia() {
@@ -132,15 +163,26 @@ export default function VideoChat() {
     if (startedRef.current) return;
     startedRef.current = true;
     manualStopRef.current = false;
+    gaveUpRef.current = false;
 
     setStatus("connecting");
     pushSystem("Connecting…");
+
+    const backendOk = await checkBackendReachable();
+    if (!backendOk) {
+      setStatus("stopped");
+      pushSystem("Backend not reachable. If deployed on Vercel, deploy the backend separately and set VITE_WS_URL to your wss:// backend.");
+      startedRef.current = false;
+      gaveUpRef.current = true;
+      return;
+    }
 
     // Open WS
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
 
     ws.onopen = async () => {
+      retryRef.current = 0;
       pushSystem("Connected to server. Finding a partner…");
       setStatus("queued");
       // Server accepts many shapes; this one is explicit
@@ -227,11 +269,17 @@ export default function VideoChat() {
       pushSystem("Disconnected from server.");
 
       // Auto-reconnect unless user explicitly stopped
-      if (!manualStopRef.current) {
+      if (!manualStopRef.current && !gaveUpRef.current) {
+        retryRef.current += 1;
+        if (retryRef.current >= 5) {
+          gaveUpRef.current = true;
+          startedRef.current = false;
+          pushSystem("Unable to maintain a connection. Please check your backend deployment / VITE_WS_URL and refresh.");
+          return;
+        }
+        const delay = Math.min(5000, 700 * 2 ** (retryRef.current - 1));
         startedRef.current = false;
-        setTimeout(() => {
-          startMatching();
-        }, 800);
+        setTimeout(() => startMatching(), delay);
       }
     };
 
