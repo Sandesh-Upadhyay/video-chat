@@ -65,11 +65,11 @@ export default function Home() {
     <div className="min-h-screen">
       <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 shadow-[0_20px_60px_rgba(59,130,246,0.35)]" />
-          <div className="leading-tight">
-            <div className="text-lg font-semibold tracking-tight">RandomTalk</div>
-            <div className="text-xs text-[rgb(var(--rt-muted2))]">Random video chat</div>
-          </div>
+          <img
+            src="/logo.png"
+            alt="RandomTalk"
+            className="h-12 w-auto rounded-2xl shadow-[0_20px_60px_rgba(59,130,246,0.30)] sm:h-14"
+          />
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle />
