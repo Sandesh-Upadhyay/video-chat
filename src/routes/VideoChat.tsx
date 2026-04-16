@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import ThemeToggle from "../components/ThemeToggle";
+import { Badge, GlassCard, cn } from "../components/ui";
 
 type WsInbound =
   | { type: "welcome"; clientId: string; country: string; gender: string }
@@ -346,104 +348,142 @@ export default function VideoChat() {
           />
         </div>
         <div className="flex items-center gap-3">
-          <div className="hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70 sm:block">
-            {status === "matched" ? "In call" : status === "queued" ? "Searching…" : status === "connecting" ? "Connecting…" : "Stopped"}
+          <div className="hidden sm:block">
+            <Badge tone={status === "matched" ? "emerald" : status === "stopped" ? "amber" : "sky"} className="bg-[rgb(var(--rt-card-bg))]">
+              <span
+                className={cn(
+                  "h-2 w-2 rounded-full",
+                  status === "matched"
+                    ? "bg-emerald-400"
+                    : status === "stopped"
+                      ? "bg-amber-300"
+                      : "bg-sky-400 animate-pulse",
+                )}
+              />
+              {status === "matched" ? "In call" : status === "queued" ? "Searching…" : status === "connecting" ? "Connecting…" : "Stopped"}
+            </Badge>
           </div>
-          <Link to="/" className="text-sm text-white/70 hover:text-white">
+          <ThemeToggle />
+          <Link to="/" className="text-sm text-[rgb(var(--rt-muted))] hover:text-[rgb(var(--rt-fg))]">
             Home
           </Link>
         </div>
       </header>
 
-      <main className="mx-auto grid w-full max-w-6xl gap-6 px-6 pb-12 lg:grid-cols-[1.4fr_0.6fr]">
+      <main className="mx-auto grid w-full max-w-6xl gap-6 px-6 pb-12 lg:grid-cols-[1.45fr_0.55fr]">
         <section className="grid gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_30px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-              <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/80">
-                You
+            <GlassCard className="relative overflow-hidden">
+              <div className="absolute left-4 top-4 z-10">
+                <Badge tone="neutral" className="bg-black/25">
+                  You
+                </Badge>
               </div>
-              <video ref={localVideoRef} autoPlay playsInline muted className="aspect-video h-full w-full bg-black object-cover" />
+              <div className="relative">
+                <video ref={localVideoRef} autoPlay playsInline muted className="aspect-video h-full w-full bg-black object-cover" />
+                <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]" />
+              </div>
               {devicesError ? (
-                <div className="absolute inset-x-0 bottom-0 bg-black/60 p-3 text-xs text-white/80">{devicesError}</div>
+                <div className="absolute inset-x-0 bottom-0 z-10 border-t border-white/10 bg-black/60 p-3 text-xs text-white/80">
+                  {devicesError}
+                </div>
               ) : null}
-            </div>
+            </GlassCard>
 
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_30px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-              <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/80">
-                Partner
+            <GlassCard className="relative overflow-hidden">
+              <div className="absolute left-4 top-4 z-10">
+                <Badge tone="neutral" className="bg-black/25">
+                  Partner
+                </Badge>
               </div>
-              <video ref={remoteVideoRef} autoPlay playsInline className="aspect-video h-full w-full bg-black object-cover" />
+              <div className="relative">
+                <video ref={remoteVideoRef} autoPlay playsInline className="aspect-video h-full w-full bg-black object-cover" />
+                <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]" />
+              </div>
               {status !== "matched" ? (
                 <div className="absolute inset-0 grid place-items-center">
-                  <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm text-white/80">
+                  <div className="rounded-2xl border border-white/10 bg-black/35 px-4 py-2 text-sm text-white/85 backdrop-blur">
                     {status === "queued" || status === "connecting" ? "Finding a partner…" : "Not connected"}
                   </div>
                 </div>
               ) : null}
-            </div>
+            </GlassCard>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <GlassCard className="p-4 sm:p-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={nextPartner}
-                className="h-11 rounded-2xl border border-white/10 bg-white/5 px-5 text-sm font-semibold text-white/90 transition hover:bg-white/10 active:bg-white/5"
+                className="h-11 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-5 text-sm font-semibold text-[rgb(var(--rt-fg))] transition hover:border-[rgb(var(--rt-card-border-hover))] hover:bg-[rgb(var(--rt-card-bg-hover))] focus:outline-none focus:ring-4 focus:ring-sky-500/10 active:brightness-[0.98]"
               >
                 Next
               </button>
               <button
                 type="button"
                 onClick={stopAll}
-                className="h-11 rounded-2xl bg-gradient-to-r from-sky-400 to-blue-600 px-5 text-sm font-semibold shadow-[0_20px_70px_rgba(59,130,246,0.35)] transition hover:brightness-110 active:brightness-95"
+                className="h-11 rounded-2xl bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-500 px-5 text-sm font-semibold text-white shadow-[0_20px_70px_rgba(59,130,246,0.35)] ring-1 ring-white/15 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-sky-500/20 active:brightness-95"
               >
                 Stop
               </button>
             </div>
 
-            <div className="text-xs text-white/60">
+            <div className="text-xs text-[rgb(var(--rt-muted2))]">
               {partnerId ? (
                 <span>
-                  Session <span className="text-white/80">{sessionId?.slice(0, 8)}</span> · Role{" "}
-                  <span className="text-white/80">{role}</span>
+                  Session <span className="text-[rgb(var(--rt-fg))]">{sessionId?.slice(0, 8)}</span> · Role{" "}
+                  <span className="text-[rgb(var(--rt-fg))]">{role}</span>
                 </span>
               ) : (
                 <span>
-                  Filters: <span className="text-white/80">{country}</span>, <span className="text-white/80">{gender}</span>
+                  Filters: <span className="text-[rgb(var(--rt-fg))]">{country}</span>, <span className="text-[rgb(var(--rt-fg))]">{gender}</span>
                 </span>
               )}
             </div>
-          </div>
+            </div>
+          </GlassCard>
         </section>
 
-        <aside className="flex min-h-[520px] flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_30px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+        <GlassCard className="flex min-h-[520px] flex-col overflow-hidden">
+          <div className="flex items-center justify-between border-b border-[rgb(var(--rt-card-border))] px-5 py-4">
             <div className="text-sm font-semibold">Chat</div>
-            <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+            <Badge tone={status === "matched" ? "emerald" : "neutral"}>
               {status === "matched" ? "Connected" : "Waiting"}
-            </div>
+            </Badge>
           </div>
 
-          <div className="flex-1 space-y-2 overflow-auto px-4 py-4">
+          <div className="flex-1 space-y-2 overflow-auto px-4 py-4 [scrollbar-width:thin] [scrollbar-color:rgba(148,163,184,0.35)_transparent]">
             {chat.length === 0 ? (
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+              <div className="rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] p-4 text-sm text-[rgb(var(--rt-muted))]">
                 Say hi when you match.
               </div>
             ) : null}
 
             {chat.map((m, idx) => {
               const align =
-                m.from === "me" ? "ml-auto bg-sky-500/15 border-sky-400/20" : m.from === "them" ? "mr-auto bg-white/5 border-white/10" : "mx-auto bg-amber-500/10 border-amber-300/20";
+                m.from === "me"
+                  ? "ml-auto border-sky-400/20 bg-sky-500/15"
+                  : m.from === "them"
+                    ? "mr-auto border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))]"
+                    : "mx-auto border-amber-300/20 bg-amber-500/10";
               const text = m.from === "system" ? `• ${m.text}` : m.text;
               return (
-                <div key={idx} className={`max-w-[92%] rounded-2xl border px-3 py-2 text-sm text-white/90 ${align}`}>
+                <div
+                  key={idx}
+                  className={cn(
+                    "max-w-[92%] rounded-2xl border px-3 py-2 text-sm text-[rgb(var(--rt-fg))]",
+                    m.from === "system" ? "text-[rgb(var(--rt-muted))]" : "",
+                    align,
+                  )}
+                >
                   {text}
                 </div>
               );
             })}
           </div>
 
-          <div className="border-t border-white/10 p-4">
+          <div className="border-t border-[rgb(var(--rt-card-border))] p-4">
             <div className="flex gap-2">
               <input
                 value={chatDraft}
@@ -453,19 +493,19 @@ export default function VideoChat() {
                 }}
                 placeholder={status === "matched" ? "Type a message…" : "Waiting for partner…"}
                 disabled={status !== "matched"}
-                className="h-11 w-full rounded-2xl border border-white/10 bg-ink-900/60 px-4 text-sm text-white outline-none transition placeholder:text-white/40 focus:border-sky-400/40 focus:ring-4 focus:ring-sky-500/10 disabled:opacity-60"
+                className="h-11 w-full rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] px-4 text-sm text-[rgb(var(--rt-fg))] outline-none transition placeholder:text-[rgb(var(--rt-muted2))] focus:border-sky-300/25 focus:ring-4 focus:ring-sky-500/10 disabled:opacity-60"
               />
               <button
                 type="button"
                 onClick={sendChat}
                 disabled={status !== "matched"}
-                className="h-11 shrink-0 rounded-2xl bg-gradient-to-r from-sky-400 to-blue-600 px-4 text-sm font-semibold shadow-[0_20px_70px_rgba(59,130,246,0.30)] transition hover:brightness-110 disabled:opacity-60"
+                className="h-11 shrink-0 rounded-2xl bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-500 px-4 text-sm font-semibold text-white shadow-[0_20px_70px_rgba(59,130,246,0.30)] ring-1 ring-white/15 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-sky-500/20 disabled:opacity-60"
               >
                 Send
               </button>
             </div>
           </div>
-        </aside>
+        </GlassCard>
       </main>
     </div>
   );

@@ -36,9 +36,10 @@ export function Badge({
 }) {
   const tones: Record<typeof tone, string> = {
     neutral: "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted))]",
-    sky: "border-sky-300/20 bg-sky-500/15 text-sky-100",
-    emerald: "border-emerald-300/20 bg-emerald-500/15 text-emerald-100",
-    amber: "border-amber-200/20 bg-amber-500/15 text-amber-100"
+    sky: "border-[rgb(var(--rt-badge-sky-border))] bg-[rgb(var(--rt-badge-sky-bg))] text-[rgb(var(--rt-badge-sky-fg))]",
+    emerald:
+      "border-[rgb(var(--rt-badge-emerald-border))] bg-[rgb(var(--rt-badge-emerald-bg))] text-[rgb(var(--rt-badge-emerald-fg))]",
+    amber: "border-[rgb(var(--rt-badge-amber-border))] bg-[rgb(var(--rt-badge-amber-bg))] text-[rgb(var(--rt-badge-amber-fg))]"
   };
 
   return (
