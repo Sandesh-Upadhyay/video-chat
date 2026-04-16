@@ -58,7 +58,7 @@ export default function SelectMenu({
   }, [open, searchable]);
 
   return (
-    <div ref={rootRef} className="grid gap-2">
+    <div ref={rootRef} className="relative grid gap-2">
       <span className="text-xs font-medium text-[rgb(var(--rt-muted))]">{label}</span>
 
       <button
@@ -87,12 +87,12 @@ export default function SelectMenu({
       <AnimatePresence>
         {open ? (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.98 }}
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.98 }}
+            exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.16, ease: "easeOut" }}
             className={cn(
-              "relative z-20 -mt-1 overflow-hidden rounded-3xl border",
+              "absolute left-0 right-0 bottom-[calc(100%+8px)] z-30 overflow-hidden rounded-3xl border",
               "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg-hover))] backdrop-blur-xl",
               "shadow-[0_30px_90px_rgba(0,0,0,0.25)]",
             )}

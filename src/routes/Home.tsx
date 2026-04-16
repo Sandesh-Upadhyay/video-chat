@@ -86,11 +86,11 @@ export default function Home() {
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="emerald">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              Live
+              Early access
             </Badge>
-            <Badge tone="sky">👥 2,000+ users online</Badge>
-            <Badge tone="sky">🌎 40+ countries</Badge>
-            <Badge tone="neutral">🔒 Safe & private</Badge>
+            <Badge tone="sky">👥 Join our first users</Badge>
+            <Badge tone="sky">🌍 Built for a global audience</Badge>
+            <Badge tone="neutral">🔒 Private by default</Badge>
           </div>
 
           <div className="grid w-full gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
@@ -107,19 +107,28 @@ export default function Home() {
                     Choose your preferences, press Start, and get matched instantly. Skip anytime with Next.
                   </p>
 
-                <div className="mt-5 grid gap-2 text-sm text-[rgb(var(--rt-muted))] sm:grid-cols-3">
-                  <div className="inline-flex items-center gap-2 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-3 py-2">
-                    🌍 <span className="font-medium text-[rgb(var(--rt-fg))]">Thousands online</span>
+                <div className="mt-5 flex flex-wrap gap-2 text-sm text-[rgb(var(--rt-muted))]">
+                  <div className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-4 py-1.5">
+                    <span className="text-base leading-none">🌍</span>
+                    <span className="font-medium text-[rgb(var(--rt-fg))]">
+                      Ready for thousands
+                    </span>
                   </div>
-                  <div className="inline-flex items-center gap-2 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-3 py-2">
-                    ⚡ <span className="font-medium text-[rgb(var(--rt-fg))]">Instant match</span>
+                  <div className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-4 py-1.5">
+                    <span className="text-base leading-none">⚡</span>
+                    <span className="font-medium text-[rgb(var(--rt-fg))]">
+                      Instant match
+                    </span>
                   </div>
-                  <div className="inline-flex items-center gap-2 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-3 py-2">
-                    🔒 <span className="font-medium text-[rgb(var(--rt-fg))]">Private by default</span>
+                  <div className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-4 py-1.5">
+                    <span className="text-base leading-none">🔒</span>
+                    <span className="font-medium text-[rgb(var(--rt-fg))]">
+                      Private by default
+                    </span>
                   </div>
                 </div>
 
-                <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-20">
                   <SelectMenu
                     label="Country"
                     value={country}
@@ -129,29 +138,16 @@ export default function Home() {
                     items={COUNTRIES.map((c) => ({ value: c.code, label: c.name }))}
                   />
 
-                  <div className="grid gap-2">
-                    <span className="text-xs font-medium text-[rgb(var(--rt-muted))]">I am</span>
-                    <div className="group relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-3 grid w-6 place-items-center text-[rgb(var(--rt-muted2))]">
-                        👤
-                      </div>
-                      <select
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value as Gender)}
-                        className="h-12 w-full appearance-none rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] pl-11 pr-10 text-sm font-medium text-[rgb(var(--rt-fg))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] outline-none ring-0 transition group-hover:border-[rgb(var(--rt-card-border-hover))] focus:border-[rgb(var(--rt-accent-cyan)/0.35)] focus:ring-4 focus:ring-[rgb(var(--rt-ring))]"
-                      >
-                        {GENDER_OPTIONS.map((g) => (
-                          <option key={g.value} value={g.value}>
-                            {g.label}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-3 grid place-items-center text-[rgb(var(--rt-muted2))]">▾</div>
-                    </div>
-                  </div>
+                  <SelectMenu
+                    label="I am"
+                    value={gender}
+                    onChange={(v) => setGender(v as Gender)}
+                    leadingIcon="👤"
+                    items={GENDER_OPTIONS}
+                  />
                 </div>
 
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-start">
                   <motion.button
                     type="button"
                     whileHover={{ scale: 1.02, y: -1 }}
@@ -186,9 +182,9 @@ export default function Home() {
                     </span>
                   </motion.button>
 
-                  <div className="text-xs text-[rgb(var(--rt-muted2))]">
+                  <p className="max-w-[44ch] text-xs leading-relaxed text-[rgb(var(--rt-muted2))] sm:pt-1">
                     By pressing “Start”, you agree to our safety rules. Keep your face visible and be respectful.
-                  </div>
+                  </p>
                 </div>
                 </div>
               </div>
