@@ -67,7 +67,7 @@ export default function SelectMenu({
         className={cn(
           "group relative flex h-12 w-full items-center justify-between gap-3 rounded-2xl border px-4",
           "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]",
-          "transition hover:border-[rgb(var(--rt-card-border-hover))] focus:outline-none focus:ring-4 focus:ring-sky-500/10",
+          "transition hover:border-[rgb(var(--rt-card-border-hover))] focus:outline-none focus:ring-4 focus:ring-[rgb(var(--rt-ring))]",
         )}
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -108,7 +108,7 @@ export default function SelectMenu({
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
                     placeholder="Search…"
-                    className="h-11 w-full rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] pl-9 pr-3 text-sm text-[rgb(var(--rt-fg))] outline-none focus:border-sky-300/25 focus:ring-4 focus:ring-sky-500/10"
+                    className="h-11 w-full rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] pl-9 pr-3 text-sm text-[rgb(var(--rt-fg))] outline-none focus:border-[rgb(var(--rt-accent-cyan)/0.35)] focus:ring-4 focus:ring-[rgb(var(--rt-ring))]"
                   />
                 </div>
               </div>
@@ -131,12 +131,12 @@ export default function SelectMenu({
                     className={cn(
                       "flex w-full items-center justify-between gap-3 rounded-2xl px-3 py-2.5 text-left text-sm transition",
                       active
-                        ? "bg-sky-500/15 text-[rgb(var(--rt-fg))] shadow-[inset_0_0_0_1px_rgba(56,189,248,0.25)]"
+                        ? "bg-[rgb(var(--rt-accent-cyan)/0.14)] text-[rgb(var(--rt-fg))] shadow-[inset_0_0_0_1px_rgba(34,211,238,0.22)]"
                         : "text-[rgb(var(--rt-muted))] hover:bg-[rgb(var(--rt-card-bg))] hover:text-[rgb(var(--rt-fg))]",
                     )}
                   >
                     <span className="min-w-0 truncate font-semibold">{it.label}</span>
-                    {active ? <span className="text-sky-400">✓</span> : <span className="text-[rgb(var(--rt-muted2))]">{it.icon ?? ""}</span>}
+                    {active ? <span className="text-[rgb(var(--rt-accent-cyan))]">✓</span> : <span className="text-[rgb(var(--rt-muted2))]">{it.icon ?? ""}</span>}
                   </button>
                 );
               })}
