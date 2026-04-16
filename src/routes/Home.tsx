@@ -66,9 +66,9 @@ export default function Home() {
       <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
           <img
-            src="/logo.png"
+            src="/random-talk-logo.png"
             alt="RandomTalk"
-            className="h-12 w-auto rounded-2xl shadow-[0_20px_60px_rgba(59,130,246,0.30)] sm:h-14"
+            className="h-12 w-auto rounded-2xl shadow-[0_20px_60px_rgba(34,211,238,0.22)] sm:h-14"
           />
         </div>
         <div className="flex items-center gap-3">
@@ -99,7 +99,7 @@ export default function Home() {
                 <div>
                   <h1 className="text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl">
                     Connect instantly with strangers worldwide —{" "}
-                    <span className="bg-gradient-to-r from-sky-300 via-blue-400 to-indigo-300 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-[rgb(var(--rt-accent-cyan))] via-[rgb(var(--rt-accent-coral))] to-[rgb(var(--rt-accent-amber))] bg-clip-text text-transparent">
                       face-to-face in seconds
                     </span>
                   </h1>
@@ -138,7 +138,7 @@ export default function Home() {
                       <select
                         value={gender}
                         onChange={(e) => setGender(e.target.value as Gender)}
-                        className="h-12 w-full appearance-none rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] pl-11 pr-10 text-sm font-medium text-[rgb(var(--rt-fg))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] outline-none ring-0 transition group-hover:border-[rgb(var(--rt-card-border-hover))] focus:border-sky-300/25 focus:ring-4 focus:ring-sky-500/10"
+                        className="h-12 w-full appearance-none rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] pl-11 pr-10 text-sm font-medium text-[rgb(var(--rt-fg))] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] outline-none ring-0 transition group-hover:border-[rgb(var(--rt-card-border-hover))] focus:border-[rgb(var(--rt-accent-cyan)/0.35)] focus:ring-4 focus:ring-[rgb(var(--rt-ring))]"
                       >
                         {GENDER_OPTIONS.map((g) => (
                           <option key={g.value} value={g.value}>
@@ -163,16 +163,16 @@ export default function Home() {
                     className={[
                       "group relative isolate h-12 w-full overflow-hidden rounded-2xl px-6 text-sm font-semibold",
                       "sm:w-auto sm:min-w-[190px]",
-                      "bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-500",
-                      "text-white shadow-[0_18px_80px_rgba(59,130,246,0.40)]",
+                      "bg-gradient-to-r from-[rgb(var(--rt-accent-cyan))] via-[rgb(var(--rt-accent-coral))] to-[rgb(var(--rt-accent-amber))]",
+                      "text-white shadow-[0_18px_80px_rgba(34,211,238,0.28)]",
                       "ring-1 ring-white/15",
-                      "transition focus:outline-none focus:ring-4 focus:ring-sky-500/20",
+                      "transition focus:outline-none focus:ring-4 focus:ring-[rgb(var(--rt-ring-strong))]",
                       "active:brightness-[0.98]",
                     ].join(" ")}
                   >
                     {/* glow */}
                     <span className="pointer-events-none absolute -inset-10 -z-10 opacity-70 blur-2xl transition-opacity duration-300 group-hover:opacity-95">
-                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.38),transparent_55%),radial-gradient(circle_at_70%_80%,rgba(99,102,241,0.28),transparent_55%)]" />
+                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.34),transparent_55%),radial-gradient(circle_at_70%_80%,rgba(251,113,133,0.26),transparent_55%)]" />
                     </span>
 
                     {/* shimmer sweep */}
@@ -197,11 +197,11 @@ export default function Home() {
             <div className="space-y-6">
               <GlassCard className="p-5 sm:p-6">
                 <div className="relative">
-                  <div className="absolute -inset-4 rounded-[28px] bg-gradient-to-br from-sky-500/20 via-indigo-500/10 to-fuchsia-500/10 blur-2xl" />
+                  <div className="absolute -inset-4 rounded-[28px] bg-gradient-to-br from-[rgb(var(--rt-accent-cyan)/0.22)] via-[rgb(var(--rt-accent-coral)/0.14)] to-[rgb(var(--rt-accent-amber)/0.12)] blur-2xl" />
                   <div className="relative overflow-hidden rounded-3xl border border-[rgb(var(--rt-card-border))] bg-black/35 p-4 backdrop-blur-xl">
                     <div className="flex items-center justify-between">
                       <Badge tone="neutral" className="bg-black/35">
-                        <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-sky-400" />
+                        <span className="inline-flex h-2 w-2 animate-pulse rounded-full bg-[rgb(var(--rt-accent-cyan))]" />
                         Connecting…
                       </Badge>
                       <div className="text-xs text-[rgb(var(--rt-muted2))]">Preview</div>
@@ -209,7 +209,7 @@ export default function Home() {
 
                     <div className="mt-4 grid gap-3">
                       <div className="relative aspect-video overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(56,189,248,0.18),transparent_55%),radial-gradient(circle_at_80%_70%,rgba(99,102,241,0.16),transparent_55%)]" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(34,211,238,0.18),transparent_55%),radial-gradient(circle_at_80%_70%,rgba(251,113,133,0.14),transparent_55%)]" />
                         <div className="absolute inset-0 opacity-30 [mask-image:linear-gradient(to_bottom,black,transparent)]">
                           <div className="h-full w-full animate-[floatGlow_6s_ease-in-out_infinite] bg-[radial-gradient(circle_at_40%_40%,rgba(255,255,255,0.18),transparent_55%)]" />
                         </div>

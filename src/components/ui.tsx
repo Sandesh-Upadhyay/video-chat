@@ -75,9 +75,9 @@ export function PillToggle({
             onClick={() => onChange(it.value)}
             className={cn(
               "group relative inline-flex h-11 items-center justify-center gap-2 rounded-2xl border px-3.5 text-[13px] transition sm:text-sm",
-              "focus:outline-none focus:ring-4 focus:ring-sky-500/10",
+              "focus:outline-none focus:ring-4 focus:ring-[rgb(var(--rt-ring))]",
               active
-                ? "border-sky-300/35 bg-gradient-to-r from-sky-500/25 to-blue-600/15 text-white shadow-[0_16px_50px_rgba(56,189,248,0.18)]"
+                ? "border-[rgb(var(--rt-accent-cyan)/0.35)] bg-gradient-to-r from-[rgb(var(--rt-accent-cyan)/0.22)] to-[rgb(var(--rt-accent-coral)/0.18)] text-[rgb(var(--rt-fg))] shadow-[0_16px_50px_rgba(34,211,238,0.14)]"
                 : "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted))] hover:border-[rgb(var(--rt-card-border-hover))] hover:bg-[rgb(var(--rt-card-bg-hover))]",
             )}
           >

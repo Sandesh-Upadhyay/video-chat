@@ -357,9 +357,9 @@ export default function VideoChat() {
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
           <img
-            src="/logo.png"
+            src="/random-talk-logo.png"
             alt="RandomTalk"
-            className="h-12 w-auto rounded-2xl shadow-[0_20px_60px_rgba(59,130,246,0.30)] sm:h-14"
+            className="h-12 w-auto rounded-2xl shadow-[0_20px_60px_rgba(34,211,238,0.22)] sm:h-14"
           />
         </div>
         <div className="flex items-center gap-3">
@@ -372,7 +372,7 @@ export default function VideoChat() {
                     ? "bg-emerald-400"
                     : status === "stopped"
                       ? "bg-amber-300"
-                      : "bg-sky-400 animate-pulse",
+                      : "bg-[rgb(var(--rt-accent-cyan))] animate-pulse",
                 )}
               />
               {status === "matched" ? "In call" : status === "queued" ? "Searching…" : status === "connecting" ? "Connecting…" : "Stopped"}
@@ -431,14 +431,14 @@ export default function VideoChat() {
               <button
                 type="button"
                 onClick={nextPartner}
-                className="h-11 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-5 text-sm font-semibold text-[rgb(var(--rt-fg))] transition hover:border-[rgb(var(--rt-card-border-hover))] hover:bg-[rgb(var(--rt-card-bg-hover))] focus:outline-none focus:ring-4 focus:ring-sky-500/10 active:brightness-[0.98]"
+                className="h-11 rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] px-5 text-sm font-semibold text-[rgb(var(--rt-fg))] transition hover:border-[rgb(var(--rt-card-border-hover))] hover:bg-[rgb(var(--rt-card-bg-hover))] focus:outline-none focus:ring-4 focus:ring-[rgb(var(--rt-ring))] active:brightness-[0.98]"
               >
                 Next
               </button>
               <button
                 type="button"
                 onClick={stopAll}
-                className="h-11 rounded-2xl bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-500 px-5 text-sm font-semibold text-white shadow-[0_20px_70px_rgba(59,130,246,0.35)] ring-1 ring-white/15 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-sky-500/20 active:brightness-95"
+                className="h-11 rounded-2xl bg-gradient-to-r from-[rgb(var(--rt-accent-cyan))] via-[rgb(var(--rt-accent-coral))] to-[rgb(var(--rt-accent-amber))] px-5 text-sm font-semibold text-white shadow-[0_20px_70px_rgba(34,211,238,0.26)] ring-1 ring-white/15 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-[rgb(var(--rt-ring-strong))] active:brightness-95"
               >
                 Stop
               </button>
@@ -481,7 +481,7 @@ export default function VideoChat() {
             {chat.map((m, idx) => {
               const align =
                 m.from === "me"
-                  ? "ml-auto border-sky-400/20 bg-sky-500/15"
+                  ? "ml-auto border-[rgb(var(--rt-accent-cyan)/0.25)] bg-[rgb(var(--rt-accent-cyan)/0.14)]"
                   : m.from === "them"
                     ? "mr-auto border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))]"
                     : "mx-auto border-amber-300/20 bg-amber-500/10";
@@ -511,13 +511,13 @@ export default function VideoChat() {
                 }}
                 placeholder={status === "matched" ? "Type a message…" : "Waiting for partner…"}
                 disabled={status !== "matched"}
-                className="h-11 w-full rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] px-4 text-sm text-[rgb(var(--rt-fg))] outline-none transition placeholder:text-[rgb(var(--rt-muted2))] focus:border-sky-300/25 focus:ring-4 focus:ring-sky-500/10 disabled:opacity-60"
+                className="h-11 w-full rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] px-4 text-sm text-[rgb(var(--rt-fg))] outline-none transition placeholder:text-[rgb(var(--rt-muted2))] focus:border-[rgb(var(--rt-accent-cyan)/0.35)] focus:ring-4 focus:ring-[rgb(var(--rt-ring))] disabled:opacity-60"
               />
               <button
                 type="button"
                 onClick={sendChat}
                 disabled={status !== "matched"}
-                className="h-11 shrink-0 rounded-2xl bg-gradient-to-r from-sky-400 via-blue-600 to-indigo-500 px-4 text-sm font-semibold text-white shadow-[0_20px_70px_rgba(59,130,246,0.30)] ring-1 ring-white/15 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-sky-500/20 disabled:opacity-60"
+                className="h-11 shrink-0 rounded-2xl bg-gradient-to-r from-[rgb(var(--rt-accent-cyan))] via-[rgb(var(--rt-accent-coral))] to-[rgb(var(--rt-accent-amber))] px-4 text-sm font-semibold text-white shadow-[0_20px_70px_rgba(34,211,238,0.24)] ring-1 ring-white/15 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-[rgb(var(--rt-ring-strong))] disabled:opacity-60"
               >
                 Send
               </button>
