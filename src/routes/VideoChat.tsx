@@ -48,6 +48,7 @@ export default function VideoChat() {
   const [chat, setChat] = useState<ChatItem[]>([]);
   const [chatDraft, setChatDraft] = useState("");
   const [devicesError, setDevicesError] = useState<string | null>(null);
+  const [statusNote, setStatusNote] = useState<string>("Connecting…");
 
   const wsRef = useRef<WebSocket | null>(null);
   const startedRef = useRef(false);
@@ -60,6 +61,10 @@ export default function VideoChat() {
 
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  function note(text: string) {
+    setStatusNote(text);
+  }
 
   function pushSystem(text: string) {
     setChat((c) => [...c, { from: "system", text, at: Date.now() }]);
@@ -103,7 +108,7 @@ export default function VideoChat() {
     } catch (e: any) {
       const msg = e?.message || "Unable to access camera/microphone.";
       setDevicesError(msg);
-      pushSystem("You have denied access to your devices. Partners will not see/hear you.");
+      pushSystem("Camera/microphone access denied. Your partner won’t be able to see or hear you.");
       // Create an empty stream so UI still works
       const empty = new MediaStream();
       localStreamRef.current = empty;
@@ -153,8 +158,11 @@ export default function VideoChat() {
     };
 
     pc.onconnectionstatechange = () => {
-      if (pc.connectionState === "connected") pushSystem("Connected.");
-      if (pc.connectionState === "failed") pushSystem("Connection failed. Try Next.");
+      if (pc.connectionState === "connected") note("Connected");
+      if (pc.connectionState === "failed") {
+        note("Connection issue");
+        pushSystem("Connection issue. Tap Next to try a new partner.");
+      }
     };
 
     return pc;
@@ -168,12 +176,13 @@ export default function VideoChat() {
     gaveUpRef.current = false;
 
     setStatus("connecting");
-    pushSystem("Connecting…");
+    note("Connecting…");
 
     const backendOk = await checkBackendReachable();
     if (!backendOk) {
       setStatus("stopped");
-      pushSystem("Backend not reachable. If deployed on Vercel, deploy the backend separately and set VITE_WS_URL to your wss:// backend.");
+      note("Service unavailable");
+      pushSystem("Service unavailable. Please try again in a moment.");
       startedRef.current = false;
       gaveUpRef.current = true;
       return;
@@ -185,7 +194,7 @@ export default function VideoChat() {
 
     ws.onopen = async () => {
       retryRef.current = 0;
-      pushSystem("Connected to server. Finding a partner…");
+      note("Searching for a partner…");
       setStatus("queued");
       // Server accepts many shapes; this one is explicit
       wsSend({ type: "enqueue" });
@@ -202,6 +211,7 @@ export default function VideoChat() {
 
       if (msg.type === "queued") {
         setStatus("queued");
+        note("Searching for a partner…");
         return;
       }
 
@@ -210,7 +220,8 @@ export default function VideoChat() {
         setSessionId(msg.sessionId);
         setRole(msg.role);
         setStatus("matched");
-        pushSystem("Partner found.");
+        note("Partner found");
+        pushSystem("Partner found. Say hi!");
 
         const pc = await createPeerConnection();
         if (msg.role === "initiator") {
@@ -222,6 +233,7 @@ export default function VideoChat() {
       }
 
       if (msg.type === "partner_disconnected") {
+        note("Partner left — searching…");
         pushSystem("Partner left. Finding a new one…");
         setPartnerId(null);
         setSessionId(null);
@@ -268,15 +280,17 @@ export default function VideoChat() {
       setSessionId(null);
       setRole(null);
       setStatus("stopped");
-      pushSystem("Disconnected from server.");
+      note("Disconnected");
 
       // Auto-reconnect unless user explicitly stopped
       if (!manualStopRef.current && !gaveUpRef.current) {
         retryRef.current += 1;
+        note("Reconnecting…");
         if (retryRef.current >= 5) {
           gaveUpRef.current = true;
           startedRef.current = false;
-          pushSystem("Unable to maintain a connection. Please check your backend deployment / VITE_WS_URL and refresh.");
+          note("Can’t reconnect");
+          pushSystem("We couldn’t reconnect. Please refresh the page and try again.");
           return;
         }
         const delay = Math.min(5000, 700 * 2 ** (retryRef.current - 1));
@@ -286,7 +300,7 @@ export default function VideoChat() {
     };
 
     ws.onerror = () => {
-      pushSystem("WebSocket error.");
+      note("Connection issue");
     };
   }
 
@@ -300,11 +314,12 @@ export default function VideoChat() {
     setPartnerId(null);
     setSessionId(null);
     setRole(null);
-    pushSystem("Stopped.");
+    note("Stopped");
+    pushSystem("Chat ended.");
   }
 
   function nextPartner() {
-    pushSystem("Next…");
+    note("Searching for a new partner…");
     wsSend({ type: "next" });
     teardownPeerConnection();
     setPartnerId(null);
@@ -447,9 +462,12 @@ export default function VideoChat() {
 
         <GlassCard className="flex min-h-[520px] flex-col overflow-hidden">
           <div className="flex items-center justify-between border-b border-[rgb(var(--rt-card-border))] px-5 py-4">
-            <div className="text-sm font-semibold">Chat</div>
-            <Badge tone={status === "matched" ? "emerald" : "neutral"}>
-              {status === "matched" ? "Connected" : "Waiting"}
+            <div className="grid gap-0.5">
+              <div className="text-sm font-semibold">Chat</div>
+              <div className="text-xs text-[rgb(var(--rt-muted2))]">{statusNote}</div>
+            </div>
+            <Badge tone={status === "matched" ? "emerald" : status === "stopped" ? "amber" : "sky"}>
+              {status === "matched" ? "Connected" : status === "stopped" ? "Offline" : "Searching"}
             </Badge>
           </div>
 
