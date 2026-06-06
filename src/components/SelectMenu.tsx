@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "./ui";
 
 type Item = { value: string; label: string; icon?: string };
+type Placement = "top" | "bottom";
 
 function useClickOutside<T extends HTMLElement>(ref: React.RefObject<T | null>, onOutside: () => void) {
   useEffect(() => {
@@ -37,8 +38,11 @@ export default function SelectMenu({
   searchable?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState<Placement>("bottom");
   const [q, setQ] = useState("");
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useClickOutside(rootRef, () => setOpen(false));
@@ -50,6 +54,25 @@ export default function SelectMenu({
     return items.filter((i) => i.label.toLowerCase().includes(query));
   }, [items, q, searchable]);
 
+  const estimatePanelHeight = useCallback(() => {
+    const searchH = searchable ? 68 : 0;
+    const itemH = 44;
+    const listH = Math.min(filtered.length * itemH + 16, 288);
+    return searchH + listH;
+  }, [filtered.length, searchable]);
+
+  const updatePlacement = useCallback(() => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+
+    const rect = trigger.getBoundingClientRect();
+    const panelHeight = panelRef.current?.offsetHeight ?? estimatePanelHeight();
+    const spaceBelow = window.innerHeight - rect.bottom - 8;
+    const spaceAbove = rect.top - 8;
+
+    setPlacement(spaceBelow >= panelHeight || spaceBelow >= spaceAbove ? "bottom" : "top");
+  }, [estimatePanelHeight]);
+
   useEffect(() => {
     if (!open) return;
     if (!searchable) return;
@@ -57,11 +80,26 @@ export default function SelectMenu({
     return () => window.clearTimeout(t);
   }, [open, searchable]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const raf = requestAnimationFrame(updatePlacement);
+    window.addEventListener("resize", updatePlacement);
+    window.addEventListener("scroll", updatePlacement, true);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", updatePlacement);
+      window.removeEventListener("scroll", updatePlacement, true);
+    };
+  }, [open, updatePlacement, filtered.length]);
+
   return (
-    <div ref={rootRef} className="relative grid gap-2">
+    <div ref={rootRef} className="relative grid w-full min-w-0 gap-2">
       <span className="text-xs font-medium text-[rgb(var(--rt-muted))]">{label}</span>
 
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={cn(
@@ -73,13 +111,13 @@ export default function SelectMenu({
         aria-expanded={open}
       >
         <span className="flex min-w-0 items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded-xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted2))]">
+          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted2))]">
             {leadingIcon ?? "🌍"}
           </span>
           <span className="min-w-0 truncate text-sm font-semibold text-[rgb(var(--rt-fg))]">{selected?.label}</span>
         </span>
 
-        <span className="grid h-8 w-8 place-items-center rounded-xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted2))] transition group-hover:bg-[rgb(var(--rt-card-bg-hover))]">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg))] text-[rgb(var(--rt-muted2))] transition group-hover:bg-[rgb(var(--rt-card-bg-hover))]">
           ▾
         </span>
       </button>
@@ -87,13 +125,15 @@ export default function SelectMenu({
       <AnimatePresence>
         {open ? (
           <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            ref={panelRef}
+            initial={{ opacity: 0, y: placement === "bottom" ? 8 : -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            exit={{ opacity: 0, y: placement === "bottom" ? 6 : -6, scale: 0.98 }}
             transition={{ duration: 0.16, ease: "easeOut" }}
             className={cn(
-              "absolute left-0 right-0 bottom-[calc(100%+8px)] z-30 overflow-hidden rounded-3xl border",
-              "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-card-bg-hover))] backdrop-blur-xl",
+              "absolute left-0 right-0 z-30 w-full max-w-full overflow-hidden rounded-3xl border",
+              placement === "bottom" ? "top-[calc(100%+8px)]" : "bottom-[calc(100%+8px)]",
+              "border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-panel-bg))]",
               "shadow-[0_30px_90px_rgba(0,0,0,0.25)]",
             )}
           >
@@ -108,7 +148,7 @@ export default function SelectMenu({
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
                     placeholder="Search…"
-                    className="h-11 w-full rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-field-bg))] pl-9 pr-3 text-sm text-[rgb(var(--rt-fg))] outline-none focus:border-[rgb(var(--rt-accent-cyan)/0.35)] focus:ring-4 focus:ring-[rgb(var(--rt-ring))]"
+                    className="h-11 w-full rounded-2xl border border-[rgb(var(--rt-card-border))] bg-[rgb(var(--rt-panel-field-bg))] pl-9 pr-3 text-sm text-[rgb(var(--rt-fg))] outline-none focus:border-[rgb(var(--rt-accent-cyan)/0.35)] focus:ring-4 focus:ring-[rgb(var(--rt-ring))]"
                   />
                 </div>
               </div>
@@ -135,8 +175,12 @@ export default function SelectMenu({
                         : "text-[rgb(var(--rt-muted))] hover:bg-[rgb(var(--rt-card-bg))] hover:text-[rgb(var(--rt-fg))]",
                     )}
                   >
-                    <span className="min-w-0 truncate font-semibold">{it.label}</span>
-                    {active ? <span className="text-[rgb(var(--rt-accent-cyan))]">✓</span> : <span className="text-[rgb(var(--rt-muted2))]">{it.icon ?? ""}</span>}
+                    <span className="min-w-0 font-semibold">{it.label}</span>
+                    {active ? (
+                      <span className="shrink-0 text-[rgb(var(--rt-accent-cyan))]">✓</span>
+                    ) : (
+                      <span className="shrink-0 text-[rgb(var(--rt-muted2))]">{it.icon ?? ""}</span>
+                    )}
                   </button>
                 );
               })}
@@ -151,4 +195,3 @@ export default function SelectMenu({
     </div>
   );
 }
-
