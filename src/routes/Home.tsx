@@ -128,23 +128,27 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-20">
-                  <SelectMenu
-                    label="Country"
-                    value={country}
-                    onChange={setCountry}
-                    leadingIcon="🌍"
-                    searchable
-                    items={COUNTRIES.map((c) => ({ value: c.code, label: c.name }))}
-                  />
+                <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-6">
+                  <div className="min-w-0">
+                    <SelectMenu
+                      label="Country"
+                      value={country}
+                      onChange={setCountry}
+                      leadingIcon="🌍"
+                      searchable
+                      items={COUNTRIES.map((c) => ({ value: c.code, label: c.name }))}
+                    />
+                  </div>
 
-                  <SelectMenu
-                    label="I am"
-                    value={gender}
-                    onChange={(v) => setGender(v as Gender)}
-                    leadingIcon="👤"
-                    items={GENDER_OPTIONS}
-                  />
+                  <div className="min-w-0">
+                    <SelectMenu
+                      label="I am"
+                      value={gender}
+                      onChange={(v) => setGender(v as Gender)}
+                      leadingIcon="👤"
+                      items={GENDER_OPTIONS}
+                    />
+                  </div>
                 </div>
 
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-start">

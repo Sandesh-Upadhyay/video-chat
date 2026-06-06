@@ -29,6 +29,8 @@ body {
   --rt-card-border: 255 255 255 / 0.10;
   --rt-card-border-hover: 255 255 255 / 0.16;
   --rt-field-bg: 6 16 36 / 0.55;
+  --rt-panel-bg: 9 18 32 / 0.97;
+  --rt-panel-field-bg: 12 22 42 / 1;
 
   /* Brand accents (logo-driven) */
   --rt-accent-cyan: 34 211 238;
@@ -61,6 +63,8 @@ body {
   --rt-card-border: 15 23 42 / 0.10;
   --rt-card-border-hover: 15 23 42 / 0.16;
   --rt-field-bg: 255 255 255 / 0.85;
+  --rt-panel-bg: 255 255 255 / 0.98;
+  --rt-panel-field-bg: 248 250 252 / 1;
 
   --rt-ring: 8 145 178 / 0.20;
   --rt-ring-strong: 8 145 178 / 0.28;
