@@ -52,6 +52,15 @@ body {
   --rt-badge-amber-bg: 245 158 11 / 0.18;
   --rt-badge-amber-border: 245 158 11 / 0.22;
   --rt-badge-amber-fg: 255 251 235;
+
+  /* Video chat surfaces */
+  --rt-video-bg: 4 8 18;
+  --rt-video-border: 255 255 255 / 0.08;
+  --rt-video-shadow: 0 24px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --rt-control-bg: 255 255 255 / 0.06;
+  --rt-control-bg-hover: 255 255 255 / 0.10;
+  --rt-control-border: 255 255 255 / 0.10;
+  --rt-control-border-hover: 255 255 255 / 0.18;
 }
 
 .theme-light {
@@ -166,6 +175,57 @@ body::before {
   }
   100% {
     transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+@keyframes shimmerSkeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes scanLine {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.35;
+  }
+  85% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(400%);
+    opacity: 0;
+  }
+}
+
+@keyframes orbitDot {
+  0% {
+    transform: rotate(0deg) translateX(28px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(28px) rotate(-360deg);
+  }
+}
+
+/* Page enter transitions */
+.page-enter {
+  animation: pageEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
